@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int          @id @default(autoincrement())
+  email     String       @unique
+  firebaseUid String     @unique 
+  role      Role         @default(RECIPIENT)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  issuedCertificates    Certificate[]          @relation("IssuerCerts")
+  receivedCertificates  Certificate[]          @relation("RecipientCerts")
+  templates             CertificationTemplate[]
+  auditLogs             AuditLog[]
+}
+
+
+
+enum Role {
+  ISSUER
+  RECIPIENT
+}
+
+
+model Certificate {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  issuerId    Int
+  recipientId Int
+  templateId  Int
+  issuedAt    DateTime  @default(now())
+  validUntil  DateTime?
+  certUrl     String?
+
+  issuer    User                 @relation("IssuerCerts", fields: [issuerId], references: [id])
+  recipient User                 @relation("RecipientCerts", fields: [recipientId], references: [id])
+  template  CertificationTemplate @relation(fields: [templateId], references: [id])
+  qrCode    QRCode?
+}
+
+
+
+model CertificationTemplate {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  issuerId    Int
+  createdAt   DateTime     @default(now())
+
+  issuer       User          @relation(fields: [issuerId], references: [id])
+  certificates Certificate[]
+}
+
+model QRCode {
+  id            Int        @id @default(autoincrement())
+  certificateId Int        @unique
+  qrData        String     // URL or base64 string
+
+  certificate Certificate @relation(fields: [certificateId], references: [id])
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String   // e.g. "Issued Certificate", "Created Template"
+  userId    Int       
+  timestamp DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+
+
+
+
