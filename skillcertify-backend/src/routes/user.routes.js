@@ -1,9 +1,28 @@
-import express from 'express';
-import { createUser, getUsers } from '../controllers/user.controller.js';
-
+import express from "express";
 const router = express.Router();
+import authMiddleware from "../middlewares/authMiddleware.js";
 
-router.post('/', createUser);
-router.get('/', getUsers);
 
-export default router;
+router.get("/me", (req, res) => {
+  res.json({ message: "Hello from /me" });
+});
+
+
+router.post("/register", authMiddleware, async (req, res) => {
+  const { role } = req.body;
+  const { firebaseUser } = req;
+
+  try {
+    const updatedUser = await req.prisma.user.update({
+      where: { firebaseUid: firebaseUser.uid },
+      data: { role },
+    });
+
+    res.json(updatedUser);
+  } catch (err) {
+    console.error("Error in /register:", err);
+    res.status(500).json({ error: "Failed to set role" });
+  }
+});
+
+export default router; 

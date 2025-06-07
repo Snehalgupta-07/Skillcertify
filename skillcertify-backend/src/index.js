@@ -8,18 +8,29 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+// ✅ CORS: allow frontend (React at localhost:3000)
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+
 app.use(express.json());
 
-// routes
+// ✅ Make prisma available on req object if needed in routes
+app.use((req, res, next) => {
+  req.prisma = prisma;
+  next();
+});
+
+// ✅ API Routes
 app.use('/api/users', userRoutes);
 
-// health check
+// ✅ Health check
 app.get('/', (req, res) => {
   res.send('SkillCertify API running 👨‍💻');
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`✅ Server is running at http://localhost:${PORT}`);
 });
