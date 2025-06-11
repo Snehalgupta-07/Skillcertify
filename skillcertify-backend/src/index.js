@@ -3,12 +3,14 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import userRoutes from './routes/user.routes.js';
+import certificateRoutes from './routes/certificate.routes.js';
+import templateRoutes from './routes/templates.routes.js';
+import publicRoutes from './routes/public.routes.js';
 
 dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 
-// ✅ CORS: allow frontend (React at localhost:3000)
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
@@ -16,16 +18,17 @@ app.use(cors({
 
 app.use(express.json());
 
-// ✅ Make prisma available on req object if needed in routes
 app.use((req, res, next) => {
   req.prisma = prisma;
   next();
 });
 
-// ✅ API Routes
-app.use('/api/users', userRoutes);
 
-// ✅ Health check
+app.use('/api/users', userRoutes);
+app.use('/api/certificates', certificateRoutes);
+app.use('/api/templates', templateRoutes);
+app.use('/api', publicRoutes);
+
 app.get('/', (req, res) => {
   res.send('SkillCertify API running 👨‍💻');
 });
