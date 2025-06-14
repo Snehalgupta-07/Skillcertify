@@ -3,8 +3,13 @@ const router = express.Router();
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 
-router.get("/me", (req, res) => {
-  res.json({ message: "Hello from /me" });
+router.get("/me", authMiddleware, async (req, res) => {
+  const user = req.appUser;
+  res.json({
+    id: user.id,
+    email: user.email,
+    role: user.role,
+  });
 });
 
 

@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Home from "./pages/Home"
-
+import Template from "./pages/Template";
+import Issuance from "./pages/Issuance";
 function App() {
   return (
     <Router>
@@ -14,6 +15,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/template" element={<Template />} />
+          <Route path="/issuance" element={<Issuance />} />
+          {/* Add more routes as needed */}
         </Routes>
       </div>
     </Router>

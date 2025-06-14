@@ -1,13 +1,13 @@
 import React from 'react'
 
-function Navbar() {
+function Navbar({user}) {
   return (
     <>
       {/* Navbar Section */}
       <nav className="flex items-center justify-between p-4 lg:px-8 border-b border-gray-700">
         <div className="flex items-center space-x-6">
           <a href="#" className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-            CertifyHub
+            SkillCertify
           </a>
           <div className="hidden md:flex space-x-6 text-gray-400">
             <a href="#" className="hover:text-white transition-colors duration-300">Dashboard</a>

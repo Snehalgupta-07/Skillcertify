@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,19 +8,18 @@ datasource db {
 }
 
 model User {
-  id        Int          @id @default(autoincrement())
-  email     String       @unique
-  firebaseUid String?     @unique
-  role      Role         @default(RECIPIENT)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  firebaseUid String? @unique
+  role      Role      @default(RECIPIENT)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   issuedCertificates    Certificate[]          @relation("IssuerCerts")
   receivedCertificates  Certificate[]          @relation("RecipientCerts")
   templates             CertificationTemplate[]
   auditLogs             AuditLog[]
-  emailLogs EmailLog[] @relation("UserEmailLogs") // ✅ Named relation
-
+  emailLogs             EmailLog[]             @relation("UserEmailLogs")
 }
 
 enum Role {
@@ -46,6 +38,8 @@ model Certificate {
   validUntil  DateTime?
   certUrl     String?
   verifyHash  String     @unique
+  certificateId String   @unique //   human-readable certificate ID, like CERT-2025-0001
+  dynamicFields Json?               // store extra fields as JSON (courseName, duration, etc.)
   status      CertificateStatus @default(ISSUED)
 
   issuer      User                 @relation("IssuerCerts", fields: [issuerId], references: [id])
@@ -66,7 +60,7 @@ model CertificationTemplate {
   id          Int          @id @default(autoincrement())
   title       String
   description String?
-  htmlContent String       // for preview generation
+  htmlContent String      @db.Text
   issuerId    Int
   createdAt   DateTime     @default(now())
 
@@ -111,16 +105,11 @@ model EmailLog {
   userId      Int
 
   certificate Certificate @relation(fields: [certId], references: [id])
-  user        User        @relation("UserEmailLogs", fields: [userId], references: [id]) // ✅ Opposite side of named relation
+  user        User        @relation("UserEmailLogs", fields: [userId], references: [id])
 }
-
 
 enum EmailStatus {
   SENT
   FAILED
   PENDING
 }
-
-
-
-

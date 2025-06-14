@@ -18,6 +18,8 @@ export default function Login() {
       // Step 1: Firebase login
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCred.user.getIdToken();
+      console.log("Token: ",token);
+      localStorage.setItem('token', token);
 
       // Step 2: Call backend to get SkillCertify user info
       const res = await fetch("http://localhost:5000/api/users/me", {

@@ -3,27 +3,33 @@ import { prisma } from "../prismaClient.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import { nanoid } from "nanoid";
 
-
-// inside your route
-const verifyHash = nanoid(20); // or use crypto.randomUUID()
-
 const router = express.Router();
 
-
+/**
+ * POST /api/certificates
+ * Create & issue a new certificate
+ * Only ISSUER can do this
+ */
 router.post("/", authMiddleware, async (req, res) => {
-  const user = req.appUser;
+  const issuer = req.appUser;
 
-  if (user.role !== "ISSUER") {
-    return res.status(403).json({ error: "Only ISSUERS can issue certificates" });
+  // ✅ Check role
+  if (issuer.role !== "ISSUER") {
+    return res.status(403).json({ error: "Only ISSUERS can issue certificates." });
   }
 
-  const { recipientEmail, title, description, skills, templateId, validUntil } = req.body;
-
-  console.log("📦 Incoming cert issue:", {
-    recipientEmail, title, description, skills, templateId, validUntil,
-  });
+  // ✅ Extract input data
+  const {
+    recipientEmail,
+    title,
+    description,
+    templateId,
+    validUntil,
+    ...dynamicFields  // any extra dynamic fields
+  } = req.body;
 
   try {
+    // ✅ Create or find recipient user
     const recipient = await prisma.user.upsert({
       where: { email: recipientEmail },
       update: {},
@@ -34,21 +40,31 @@ router.post("/", authMiddleware, async (req, res) => {
       },
     });
 
+    // ✅ Generate unique cert URL segment & hashes
     const uniqueUrl = nanoid(10);
+    const verifyHash = nanoid(20);
 
+    // ✅ Generate certificateId like CERT-2025-00001
+    // Safe & readable for recipient
+    const nextNumber = Math.floor(Math.random() * 100000);
+    const certificateId = `CERT-${new Date().getFullYear()}-${String(nextNumber).padStart(5, '0')}`;
+
+    // ✅ Create certificate
     const certificate = await prisma.certificate.create({
       data: {
         title,
         description,
-        issuerId: user.id,
+        issuerId: issuer.id,
         recipientId: recipient.id,
-        templateId,
+        templateId: parseInt(templateId),
         certUrl: `/cert/${uniqueUrl}`,
+        verifyHash: verifyHash,
+        certificateId: certificateId,
         validUntil: validUntil ? new Date(validUntil) : null,
-        verifyHash,
       },
     });
 
+    // ✅ Create QR code record
     await prisma.qRCode.create({
       data: {
         certificateId: certificate.id,
@@ -56,13 +72,22 @@ router.post("/", authMiddleware, async (req, res) => {
       },
     });
 
-    res.status(201).json({ certificate });
+    // ✅ Return result
+    res.status(201).json({
+      success: true,
+      certificate,
+    });
+
   } catch (err) {
-    console.error("❌ Certificate issue error:", err.message);
-    console.error(err);
+    console.error("❌ Certificate creation error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
+
+/**
+ * (Optional) GET /api/certificates/:id
+ * Could add more routes like get, update, delete
+ */
 
 export default router;

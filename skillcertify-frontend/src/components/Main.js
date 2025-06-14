@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Main() {
+function Main({user, isIssuer, isRecipient}) {
   return (
      <main className="container mx-auto p-4 lg:p-8">
         {/* Hero Section */}

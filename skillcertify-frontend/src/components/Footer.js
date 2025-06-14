@@ -7,7 +7,7 @@ function Footer() {
             {/* Column 1: CertifyHub Brand */}
             <div className="lg:col-span-2 text-center md:text-left">
               <a href="#" className="text-3xl font-extrabold mb-4 block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-                CertifyHub
+                SkillCertify
               </a>
               <p className="text-sm leading-relaxed">
                 Empowering individuals and organizations with verifiable and secure digital credentials.

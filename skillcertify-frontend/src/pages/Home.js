@@ -3,9 +3,9 @@ import { onAuthStateChanged, getIdToken } from 'firebase/auth';
 import { auth } from '../firebase';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import MissionSection from '../components/MissionSection';
-import CoreFunctionalities from '../components/CoreFunctionalities';
-import EFooter from '../components/EnhancedFooter';
+import MissionSection from '../components/Mission';
+import CoreFunctionalities from '../components/Functionality';
+import EFooter from '../components/Footer';
 import Main from '../components/Main';
 
 const App = () => {
@@ -13,14 +13,10 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Subscribe to Firebase auth state changes
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
-          // Get Firebase ID token
           const token = await firebaseUser.getIdToken();
-
-          // Fetch user data from backend
           const res = await fetch('http://localhost:5000/api/users/me', {
             method: 'GET',
             headers: {
@@ -68,20 +64,13 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 font-inter text-gray-100 antialiased">
-     {/* Navbar Component */}
-      <Navbar user={user} isIssuer={isIssuer} isRecipient={isRecipient} />
-
-      {/* Main Content Area */}
+      <Navbar user={user} />
       <Main user={user} isIssuer={isIssuer} isRecipient={isRecipient} />
-     
-        {/* Mission Section */}
-        <MissionSection />  
+      <MissionSection />  
+      <CoreFunctionalities />
+      <EFooter />
+    </div>
+  );
+};
 
-        {/* Core Functionalities Section */}
-        <CoreFunctionalities />
-
-         {/* Enhanced Footer Section */}
-        <EFooter  />
-         </div>
-  )}
 export default App;
