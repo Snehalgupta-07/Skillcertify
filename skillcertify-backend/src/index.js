@@ -6,6 +6,7 @@ import userRoutes from './routes/user.routes.js';
 import certificateRoutes from './routes/certificate.routes.js';
 import templateRoutes from './routes/templates.routes.js';
 import publicRoutes from './routes/public.routes.js';
+import recipientRoutes from './routes/recipient.routes.js';
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api', publicRoutes);
+app.use('/api/recipients', recipientRoutes);
 
 app.get('/', (req, res) => {
   res.send('SkillCertify API running 👨‍💻');

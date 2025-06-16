@@ -6,6 +6,8 @@ import Signup from "./components/Signup";
 import Home from "./pages/Home"
 import Template from "./pages/Template";
 import Issuance from "./pages/Issuance";
+import RecipientDashboard from "./pages/RecipientDashboard"; 
+
 function App() {
   return (
     <Router>
@@ -17,6 +19,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/template" element={<Template />} />
           <Route path="/issuance" element={<Issuance />} />
+          <Route path="/recipient-dashboard" element={<RecipientDashboard />} />
           {/* Add more routes as needed */}
         </Routes>
       </div>
