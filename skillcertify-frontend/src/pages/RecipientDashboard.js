@@ -63,8 +63,8 @@ const RecipientDashboard = () => {
   };
 
   // Handlers
-  const handleView = (cert) => {
-    const url = `http://localhost:5173${cert.certUrl}`;
+const handleView = (cert) => {
+    const url = `${window.location.origin}/view/${cert.id}`;
     window.open(url, '_blank');
     if (cert.status === 'Issued') {
       updateStatus(cert.id, 'Viewed');

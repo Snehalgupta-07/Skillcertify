@@ -162,4 +162,55 @@ router.get("/:id/download", async (req, res) => {
   }
 });
 
+/**
+ * GET /api/certificates/:id
+ * Fetch single certificate with template, issuer & QR
+ */
+router.get("/:id", async (req, res) => {
+  const certId = parseInt(req.params.id);
+
+  try {
+    const cert = await prisma.certificate.findUnique({
+      where: { id: certId },
+      include: {
+        template: true,
+        issuer: true,
+        recipient: true,
+        qrCode: true,
+      },
+    });
+
+    if (!cert) {
+      return res.status(404).json({ error: "Certificate not found" });
+    }
+
+    res.json({
+      id: cert.id,
+      title: cert.title,
+      issuedAt: cert.issuedAt,
+      validUntil: cert.validUntil,
+      certUrl: cert.certUrl,
+      verifyHash: cert.verifyHash,
+      template: {
+        htmlContent: cert.template.htmlContent,
+      },
+     //placeholders
+      issuerName: cert.issuer.email.split('@')[0],
+      recipientName: cert.recipient.email.split('@')[0],
+      courseName: cert.title, // or cert.dynamicFields.courseName if stored
+      duration: cert.dynamicFields?.duration || '',
+      completionDate: cert.dynamicFields?.completionDate || '',
+      certificateId: cert.certificateId,
+      issueDate: cert.issuedAt,
+      qrCodeUrl: cert.qrCode ? cert.qrCode.qrData : null,
+    });
+
+  } catch (err) {
+    console.error(" Error fetching certificate:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 export default router;

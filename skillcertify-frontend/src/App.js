@@ -7,6 +7,8 @@ import Home from "./pages/Home"
 import Template from "./pages/Template";
 import Issuance from "./pages/Issuance";
 import RecipientDashboard from "./pages/RecipientDashboard"; 
+import CertificateView from "./pages/CertificateView";
+import VerifyPage from "./pages/VerifyPage";
 
 function App() {
   return (
@@ -20,7 +22,10 @@ function App() {
           <Route path="/template" element={<Template />} />
           <Route path="/issuance" element={<Issuance />} />
           <Route path="/recipient-dashboard" element={<RecipientDashboard />} />
-          {/* Add more routes as needed */}
+          <Route path="/verify/:hash" element={<VerifyPage />} />
+          <Route path="/view/:id" element={<CertificateView />} />
+          {/*
+          /* Add more routes as needed */}
         </Routes>
       </div>
     </Router>
