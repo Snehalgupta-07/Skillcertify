@@ -2,7 +2,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
-import Signup from "./components/Signup";
+
 import Home from "./pages/Home"
 import Template from "./pages/Template";
 import Issuance from "./pages/Issuance";
@@ -17,7 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          
           <Route path="/home" element={<Home />} />
           <Route path="/template" element={<Template />} />
           <Route path="/issuance" element={<Issuance />} />

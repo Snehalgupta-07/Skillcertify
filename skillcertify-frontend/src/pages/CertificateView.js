@@ -104,7 +104,7 @@ const CertificateView = () => {
             <h3 className="text-xl font-bold text-white mb-2">Certificate Verified!</h3>
             <p className="text-gray-200 text-sm">This certificate is digitally verified by SkillCertify.</p>
             <a
-              href={`http://localhost:5173/cert/${certificate.verifyHash}`}
+              href={`http://localhost:3000/verify/${certificate.verifyHash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block mt-4 text-sm text-blue-300 hover:underline hover:text-blue-200"

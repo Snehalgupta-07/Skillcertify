@@ -1,4 +1,6 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function Main({user, isIssuer, isRecipient}) {
   return (
@@ -19,18 +21,24 @@ function Main({user, isIssuer, isRecipient}) {
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
             {isIssuer && (
               <>
-                <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
-                  Create New Certificate
-                </button>
+                <Link to="/issuance">
+  <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold text-lg rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+    Create New Certificate
+  </button>
+</Link>     
+                 <Link to="/template">
                 <button className="px-8 py-4 bg-gray-700 text-gray-200 font-bold text-lg rounded-xl shadow-lg hover:bg-gray-600 transition-all duration-300 transform hover:scale-105">
-                  My Issued Certificates
+                  Create New Template
                 </button>
+                </Link>
               </>
             )}
             {isRecipient && (
+              <Link to="/recipient-dashboard">
               <button className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold text-lg rounded-xl shadow-lg hover:from-teal-600 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105">
                 My Received Certificates
               </button>
+              </Link>
             )}
           </div>
         </section>
