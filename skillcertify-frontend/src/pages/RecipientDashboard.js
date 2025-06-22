@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const RecipientDashboard = () => {
   const [certificates, setCertificates] = useState([]);
   const [searchTerm, setSearchTerm]       = useState('');
   const [filterStatus, setFilterStatus]   = useState('All');
-  const [hoveredId, setHoveredId]         = useState(null);
+  // const [hoveredId, setHoveredId]         = useState(null);
   const [loading, setLoading]             = useState(true);
 
   // Fetch recipient’s certificates on mount
@@ -20,7 +20,7 @@ const RecipientDashboard = () => {
       try {
         const token = await user.getIdToken(true);
         const res   = await fetch(
-          'http://localhost:5000/api/recipients/certificates',
+          `${backendUrl}/api/recipients/certificates`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -41,7 +41,7 @@ const RecipientDashboard = () => {
     try {
       const token = await auth.currentUser.getIdToken(true);
       await fetch(
-        `http://localhost:5000/api/certificates/${id}/status`,
+        `${backendUrl}/api/certificates/${id}/status`,
         {
           method: 'PATCH',
           headers: {
@@ -72,7 +72,7 @@ const handleView = (cert) => {
   };
 
   const handleDownload = (cert) => {
-    const url = `http://localhost:5000/api/certificates/${cert.id}/download`;
+    const url = `${backendUrl}/api/certificates/${cert.id}/download`;
     const a   = document.createElement('a');
     a.href    = url;
     a.download= `${cert.certificateId}.pdf`;

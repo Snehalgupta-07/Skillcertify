@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from "firebase/auth";
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 // Helper: Replace placeholders
 const replacePlaceholders = (html, data) => {
   let content = html;
@@ -38,7 +38,7 @@ const Issuance = () => {
         setUser(firebaseUser);
         try {
           const token = await firebaseUser.getIdToken(true);
-          const res = await fetch('http://localhost:5000/api/templates', {
+          const res = await fetch(`${backendUrl}/api/templates`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const data = await res.json();
@@ -79,12 +79,12 @@ const Issuance = () => {
       setDynamicFields({});
       setPreviewHtml('');
     }
-  }, [selectedTemplateId]);
+  });
 
   // When fields change
   useEffect(() => {
     updatePreview(dynamicFields);
-  }, [dynamicFields, recipientEmail, courseName, duration, completionDate, selectedTemplate]);
+  });
 
   const updatePreview = (fields) => {
     if (!selectedTemplate) return;
@@ -124,7 +124,7 @@ const Issuance = () => {
         ...dynamicFields,
       };
 
-      const res = await fetch('http://localhost:5000/api/certificates', {
+      const res = await fetch(`${backendUrl}/api/certificates`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ const Issuance = () => {
 
             {issuedCert && (
               <a
-                href={`http://localhost:5000/api/certificates/${issuedCert.id}/download`}
+                href={`${backendUrl}/api/certificates/${issuedCert.id}/download`}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded-lg"

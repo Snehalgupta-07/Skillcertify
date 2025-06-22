@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const VerifyPage = () => {
   const { hash } = useParams();
   const [certificate, setCertificate] = useState(null);
 
   useEffect(() => {
   const fetchCertificate = async () => {
-    const res = await fetch(`http://localhost:5000/api/verify/${hash}`);
+    const res = await fetch(`${backendUrl}/api/verify/${hash}`);
     const data = await res.json();
     if (data.valid) {
       setCertificate(data.certificate); // FIX: only the cert part

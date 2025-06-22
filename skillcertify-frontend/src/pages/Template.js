@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const Template = () => {
   const [templateTitle, setTemplateTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -53,7 +53,7 @@ const Template = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/templates', {
+      const res = await fetch(`${backendUrl}/api/templates`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

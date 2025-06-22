@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase"; //  your configured firebase auth
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 //  LOGIN COMPONENT
 const LoginComponent = ({ onSwitchToSignup, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ const LoginComponent = ({ onSwitchToSignup, onLoginSuccess }) => {
       const token = await userCred.user.getIdToken();
       localStorage.setItem('token', token);
 
-      const res = await fetch("http://localhost:5000/api/users/me", {
+      const res = await fetch(`${backendUrl}/api/users/me`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -103,7 +103,7 @@ const SignupComponent = ({ onSwitchToLogin, onSignupSuccess }) => {
       const token = await userCred.user.getIdToken();
       localStorage.setItem('token', token);
 
-      const res = await fetch("http://localhost:5000/api/users/register", {
+      const res = await fetch(`${backendUrl}/api/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

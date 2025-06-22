@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const CertificateView = () => {
   const { id } = useParams();
   const [certificate, setCertificate] = useState(null);
@@ -9,7 +9,7 @@ const CertificateView = () => {
   useEffect(() => {
     const fetchCertificate = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/certificates/${id}`);
+        const res = await fetch(`${backendUrl}/api/certificates/${id}`);
         const data = await res.json();
         setCertificate(data);
       } catch (err) {
@@ -20,7 +20,7 @@ const CertificateView = () => {
   }, [id]);
 
   const handleDownloadPdf = () => {
-    window.open(`http://localhost:5000/api/certificates/${id}/download`, '_blank');
+    window.open(`${backendUrl}/api/certificates/${id}/download`, '_blank');
   };
 
   const handleShare = (platform) => {
@@ -104,7 +104,7 @@ const CertificateView = () => {
             <h3 className="text-xl font-bold text-white mb-2">Certificate Verified!</h3>
             <p className="text-gray-200 text-sm">This certificate is digitally verified by SkillCertify.</p>
             <a
-              href={`http://localhost:3000/verify/${certificate.verifyHash}`}
+              href={`${window.location.origin}/verify/${certificate.verifyHash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block mt-4 text-sm text-blue-300 hover:underline hover:text-blue-200"

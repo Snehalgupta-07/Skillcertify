@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, getIdToken } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+
 import { auth } from '../firebase';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import MissionSection from '../components/Mission';
 import CoreFunctionalities from '../components/Functionality';
 import EFooter from '../components/Footer';
 import Main from '../components/Main';
-
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const App = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const App = () => {
       if (firebaseUser) {
         try {
           const token = await firebaseUser.getIdToken();
-          const res = await fetch('http://localhost:5000/api/users/me', {
+          const res = await fetch(`${backendUrl}/api/users/me`, {
             method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,

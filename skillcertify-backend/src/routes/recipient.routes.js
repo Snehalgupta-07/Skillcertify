@@ -1,6 +1,7 @@
 import express from "express";
 import { prisma } from "../prismaClient.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const router = express.Router();
 
@@ -38,7 +39,7 @@ router.get("/certificates", authMiddleware, async (req, res) => {
       issueDate: cert.issuedAt.toISOString().split("T")[0],
       expiryDate: cert.validUntil ? cert.validUntil.toISOString().split("T")[0] : null,
       status: cert.status,
-      certificateUrl: `http://localhost:5000/api/certificates/${cert.id}/download`, // or a view link
+      certificateUrl: `${backendUrl}/api/certificates/${cert.id}/download`, // or a view link
     }));
 
     res.json(result);
