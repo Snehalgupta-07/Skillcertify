@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import { prisma } from "../prismaClient.js";
 
-import serviceAccount from "../firebaseServiceAccount.js";
+import serviceAccount from "../utils/firebaseServiceAccount.js";
 
 
 
