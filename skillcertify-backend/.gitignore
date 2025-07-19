@@ -4,4 +4,4 @@ node_modules
 
 
 /prisma/migrations/
-config/firebaseServiceAccountKey.json
+config/firebaseServiceAccountKey.js
